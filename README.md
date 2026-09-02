@@ -165,4 +165,4 @@ Tests cover: text normalization, language pair validation, error-to-Hindi mappin
 5. Click "पूरा पाठ बनाएं" for the full lesson flow (simplify + translate + audio)
 6. Navigate to "FLN पाठ योजना" to browse 8 pre-built lesson packs
 7. Generate a printable worksheet from any lesson pack
-8. Use "ऑफलाइन सिंक" to download packs for offline use
+8. Use "ऑफलाइन सिंक" to download packs for offline  use
