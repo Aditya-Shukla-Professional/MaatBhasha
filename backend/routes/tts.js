@@ -95,9 +95,9 @@ router.post('/', async (req, res, next) => {
       narrateText = await translateForNarration(textToConvert, fromLang, TTS_FALLBACK, apiKey);
     }
 
-    // Bulbul v3 max input is 500 characters
-    const safeText = narrateText.length > 500
-      ? narrateText.slice(0, 497) + '…'
+    // Bulbul v3 max input is 2500 characters
+    const safeText = narrateText.length > 2500
+      ? narrateText.slice(0, 2497) + '…'
       : narrateText;
 
     console.log(`[TTS] Narrating in ${usedLang}, ${safeText.length} chars`);
@@ -105,12 +105,11 @@ router.post('/', async (req, res, next) => {
     const response = await axios.post(
       `${SARVAM_BASE}/text-to-speech`,
       {
-        inputs: [safeText],
-        target_language_code: usedLang,
+        text: safeText,
+        language_code: usedLang,
         speaker: 'priya',     // confirmed compatible with bulbul:v3
         pace: 1.0,
         speech_sample_rate: 22050,
-        enable_preprocessing: true,
         model: 'bulbul:v3',
       },
       {

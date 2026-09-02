@@ -52,6 +52,10 @@ router.post('/', async (req, res, next) => {
         ],
         temperature: 0.3,
         max_tokens: 512,
+        // Thinking mode is on by default and puts the answer in
+        // reasoning_content instead of content. Turn it off so the model
+        // returns the rewritten lesson directly.
+        reasoning_effort: 'none',
       },
       {
         headers: {
@@ -63,8 +67,9 @@ router.post('/', async (req, res, next) => {
     );
 
     const msg = response.data.choices?.[0]?.message;
-    // sarvam-105b may put the answer in content OR reasoning_content (thinking mode)
-    const simplified = (msg?.content?.trim()) || (msg?.reasoning_content?.trim());
+    // Only use content. reasoning_content holds the model's internal thinking,
+    // which is unrelated to the lesson and must never reach students.
+    const simplified = msg?.content?.trim();
     if (!simplified) {
       console.error('[Simplify] Full response:', JSON.stringify(response.data, null, 2));
       throw new Error('Empty response from model');
