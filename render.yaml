@@ -1,0 +1,51 @@
+services:
+  # ── Backend API ─────────────────────────────────────────────────────────────
+  - type: web
+    name: maatbhasha-api
+    runtime: node
+    plan: free
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      # Set in the Render dashboard — never commit the real key.
+      - key: SARVAM_API_KEY
+        sync: false
+      # The deployed frontend URL, e.g. https://maatbhasha.onrender.com
+      # Only known after the static site deploys, so set it in the dashboard.
+      - key: CORS_ORIGINS
+        sync: false
+
+  # ── Frontend (static) ───────────────────────────────────────────────────────
+  - type: web
+    name: maatbhasha
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist
+    routes:
+      # Forward API calls to the backend so the browser sees one origin.
+      # This replaces the Vite dev proxy in frontend/vite.config.js.
+      # NOTE: update this host if Render assigns the API a different name.
+      - type: rewrite
+        source: /api/*
+        destination: https://maatbhasha-api.onrender.com/api/*
+      # SPA fallback — must stay last, after the /api rule.
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      # Baked into the bundle at build time; a change needs a redeploy.
+      - key: VITE_FIREBASE_API_KEY
+        sync: false
+      - key: VITE_FIREBASE_AUTH_DOMAIN
+        sync: false
+      - key: VITE_FIREBASE_PROJECT_ID
+        sync: false
+      - key: VITE_FIREBASE_STORAGE_BUCKET
+        sync: false
+      - key: VITE_FIREBASE_MESSAGING_SENDER_ID
+        sync: false
+      - key: VITE_FIREBASE_APP_ID
+        sync: false
