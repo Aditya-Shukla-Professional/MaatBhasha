@@ -1,4 +1,4 @@
-﻿# PALASH MaatBhasha
+# PALASH MaatBhasha
 ### AI-Powered Vernacular Pedagogy · Mother Tongue-Based Primary Education
 
 [![SIH Prototype](https://img.shields.io/badge/Smart%20India%20Hackathon-Prototype-orange)]()
